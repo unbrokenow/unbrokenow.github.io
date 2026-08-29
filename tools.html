@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Free Budget Calculators — Zero-Based, Debt Payoff, Savings & Emergency Fund | unBroke</title>
+<meta name="description" content="Four free calculators: zero-based budget planner, debt payoff timeline, savings goal projector, and emergency fund sizer. No signup, instant results.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0f2547; --ink-soft:#3a4d6b;
+    --paper:#f6f4ef; --paper-card:#ffffff;
+    --line:#e4e0d6;
+    --sky:#1668a8; --teal:#0d9aa8; --mint:#2fb45c; --ember:#c2410c;
+    --serif:'Fraunces',Georgia,serif;
+    --sans:'Manrope',-apple-system,BlinkMacSystemFont,sans-serif;
+    --mono:'IBM Plex Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;font-family:var(--sans);background:var(--paper);color:var(--ink);
+    -webkit-font-smoothing:antialiased;line-height:1.6;
+  }
+  a{color:inherit}
+  :focus-visible{outline:2px solid var(--sky);outline-offset:3px;border-radius:4px}
+  .wrap{max-width:760px;margin:0 auto;padding:0 24px}
+
+  nav{
+    position:sticky;top:0;z-index:40;background:rgba(15,37,71,.92);backdrop-filter:blur(10px);
+    border-bottom:1px solid rgba(255,255,255,.08);
+  }
+  .nav-row{display:flex;align-items:center;justify-content:space-between;padding:13px 0;max-width:960px;margin:0 auto;padding-left:24px;padding-right:24px}
+  .nav-brand{display:flex;align-items:center;gap:9px;text-decoration:none;color:#fff;font-family:var(--serif);font-weight:700;font-size:16px}
+  .nav-links{display:flex;align-items:center;gap:22px}
+  .nav-links a{color:#c7d6e8;text-decoration:none;font-size:13.5px;font-weight:600}
+  .nav-links a:hover{color:#fff}
+  .nav-cta{background:var(--mint);color:#0a2416;padding:9px 16px;border-radius:8px;font-weight:800;font-size:13px}
+  @media(max-width:600px){.nav-links a:not(.nav-cta){display:none}}
+
+  header.tools-hero{background:linear-gradient(175deg,var(--ink) 0%,#123258 100%);color:#fff;padding:50px 0 40px;text-align:center}
+  .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#8fb4d9;margin:0 0 14px}
+  h1.tools-title{font-family:var(--serif);font-size:clamp(30px,5vw,44px);margin:0 0 12px;font-weight:600}
+  .tools-sub{color:#d3e0ee;max-width:520px;margin:0 auto;font-size:15px}
+
+  .tool-nav{position:sticky;top:53px;z-index:30;background:var(--paper);border-bottom:1px solid var(--line);padding:12px 0}
+  .tool-nav-row{display:flex;gap:8px;overflow-x:auto;max-width:760px;margin:0 auto;padding:0 24px}
+  .tool-nav-pill{
+    flex-shrink:0;font-family:var(--sans);font-size:13px;font-weight:700;color:var(--ink-soft);
+    background:var(--paper-card);border:1px solid var(--line);border-radius:20px;
+    padding:8px 15px;text-decoration:none;white-space:nowrap;
+  }
+  .tool-nav-pill:hover{border-color:var(--sky);color:var(--sky)}
+
+  .tool-section{padding:56px 0;border-bottom:1px solid var(--line)}
+  .tool-section:last-of-type{border-bottom:none}
+  .tool-tag{
+    display:inline-block;font-family:var(--mono);font-size:11px;color:var(--teal);
+    background:#e6f4f4;padding:3px 9px;border-radius:20px;margin-bottom:12px;
+  }
+  .tool-tag.debt{color:var(--ember);background:#fdeee6}
+  .tool-tag.savings{color:var(--mint);background:#e6f6ec}
+  .tool-tag.emergency{color:var(--sky);background:#e6f0f9}
+  .tool-h2{font-family:var(--serif);font-size:clamp(24px,3.6vw,32px);font-weight:600;margin:0 0 8px}
+  .tool-desc{color:var(--ink-soft);font-size:14.5px;margin:0 0 26px;max-width:520px}
+
+  .calc-box{
+    background:var(--paper-card);border:1px solid var(--line);border-radius:16px;padding:26px;
+  }
+  .field-row{margin-bottom:16px}
+  .field-label{display:block;font-size:12.5px;font-weight:700;color:var(--ink-soft);margin-bottom:6px;text-transform:uppercase;letter-spacing:.03em}
+  .field-hint{font-size:12px;color:var(--ink-soft);margin-top:5px}
+  .field-input-wrap{display:flex;align-items:center;background:#faf9f6;border:1.5px solid var(--line);border-radius:10px;padding:0 14px}
+  .field-input-wrap:focus-within{border-color:var(--sky)}
+  .field-prefix{font-family:var(--mono);font-size:16px;color:var(--ink-soft);margin-right:6px}
+  .field-input{
+    flex:1;border:none;background:transparent;font-family:var(--sans);font-size:17px;font-weight:600;
+    color:var(--ink);padding:12px 0;outline:none;min-width:0;
+  }
+  select.field-input{font-weight:600;cursor:pointer}
+  .field-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media(max-width:480px){.field-grid{grid-template-columns:1fr}}
+
+  .result-box{
+    margin-top:22px;background:var(--ink);border-radius:14px;padding:22px 24px;color:#fff;
+    display:none;
+  }
+  .result-box.show{display:block}
+  .result-empty{
+    margin-top:22px;padding:20px;text-align:center;color:var(--ink-soft);font-size:13.5px;
+    border:1.5px dashed var(--line);border-radius:14px;
+  }
+  .result-empty.hide{display:none}
+  .result-label{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:#8fb4d9;margin:0 0 4px}
+  .result-big{font-family:var(--serif);font-size:clamp(26px,4vw,34px);font-weight:700;margin:0 0 4px}
+  .result-sub{font-size:13px;color:#c3d2e3;margin:0}
+  .result-row{display:flex;justify-content:space-between;padding:9px 0;border-top:1px solid rgba(255,255,255,.12);font-size:13.5px}
+  .result-row span:first-child{color:#c3d2e3}
+  .result-row span:last-child{font-weight:700}
+  .result-table{margin-top:18px}
+  .rt-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--line);font-size:13.5px}
+  .rt-row:last-child{border-bottom:none}
+  .rt-cat{color:var(--ink)}
+  .rt-pct{font-family:var(--mono);font-size:11.5px;color:var(--ink-soft);margin-left:8px}
+  .rt-amt{font-weight:700;color:var(--ink)}
+
+  .tool-cta{
+    margin-top:22px;background:#eef6f0;border:1px solid #bfe3cb;border-radius:14px;padding:18px 20px;
+  }
+  .tool-cta p{margin:0 0 12px;font-size:13.5px;color:var(--ink-soft)}
+  .btn{
+    display:inline-flex;align-items:center;gap:8px;font-family:var(--sans);font-weight:700;
+    font-size:13.5px;padding:11px 20px;border-radius:9px;text-decoration:none;
+  }
+  .btn-primary{background:var(--mint);color:#0a2416}
+
+  .stalled-note{
+    margin-top:14px;padding:12px 14px;background:#fdeee6;border:1px solid #f3c6ad;border-radius:10px;
+    font-size:13px;color:#9a3412;
+  }
+
+  footer{border-top:1px solid var(--line);padding:36px 0 44px}
+  .foot-row{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px}
+  .foot-links{display:flex;align-items:center;gap:18px;font-size:13px;color:var(--ink-soft)}
+  .foot-links a{text-decoration:none}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-row">
+    <a class="nav-brand" href="index.html">unBroke</a>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="index.html#privacy">Privacy</a>
+      <a class="nav-cta" href="https://github.com/unbrokenow/unbroke-releases/releases/latest/download/unbroke.apk" download>Download</a>
+    </div>
+  </div>
+</nav>
+
+<header class="tools-hero">
+  <div class="wrap">
+    <p class="eyebrow">Free · No signup · Instant results</p>
+    <h1 class="tools-title">Budget calculators</h1>
+    <p class="tools-sub">
+      The same math unBroke runs for you every month — free to use right here, no download required.
+    </p>
+  </div>
+</header>
+
+<div class="tool-nav">
+  <div class="tool-nav-row">
+    <a class="tool-nav-pill" href="#zero-based">Zero-Based Budget</a>
+    <a class="tool-nav-pill" href="#debt-payoff">Debt Payoff</a>
+    <a class="tool-nav-pill" href="#savings-goal">Savings Goal</a>
+    <a class="tool-nav-pill" href="#emergency-fund">Emergency Fund</a>
+  </div>
+</div>
+
+<!-- ============ 1. ZERO-BASED BUDGET ============ -->
+<section class="tool-section" id="zero-based">
+  <div class="wrap">
+    <span class="tool-tag">ZERO-BASED</span>
+    <h2 class="tool-h2">Zero-Based Budget Calculator</h2>
+    <p class="tool-desc">
+      Not a fixed rule like 50/30/20 — a starting draft. Zero-based budgeting means every unit of
+      income gets its own job until nothing's left unassigned. This gives you a sensible first pass;
+      you adjust every category from there.
+    </p>
+
+    <div class="calc-box">
+      <div class="field-row">
+        <label class="field-label" for="zb-income">Monthly take-home income</label>
+        <div class="field-input-wrap">
+          <span class="field-prefix">€</span>
+          <input class="field-input" id="zb-income" type="number" inputmode="decimal" placeholder="2000" min="0">
+        </div>
+        <p class="field-hint">After taxes and deductions — what actually lands in your account.</p>
+      </div>
+
+      <div class="result-empty" id="zb-empty">Enter your income above to see a draft breakdown.</div>
+      <div class="result-table" id="zb-result" style="display:none"></div>
+
+      <div class="tool-cta">
+        <p>A draft is just a start. unBroke tracks every category against real spending, all month, automatically.</p>
+        <a class="btn btn-primary" href="https://github.com/unbrokenow/unbroke-releases/releases/latest/download/unbroke.apk" download>Download unBroke free</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 2. DEBT PAYOFF ============ -->
+<section class="tool-section" id="debt-payoff">
+  <div class="wrap">
+    <span class="tool-tag debt">DEBT</span>
+    <h2 class="tool-h2">Debt Payoff Calculator</h2>
+    <p class="tool-desc">
+      How long until this debt is gone, and how much interest you'll pay along the way — the exact
+      calculation unBroke's app uses for its "debt-free by" projection.
+    </p>
+
+    <div class="calc-box">
+      <div class="field-grid">
+        <div class="field-row">
+          <label class="field-label" for="dp-balance">Current balance</label>
+          <div class="field-input-wrap">
+            <span class="field-prefix">€</span>
+            <input class="field-input" id="dp-balance" type="number" inputmode="decimal" placeholder="3000" min="0">
+          </div>
+        </div>
+        <div class="field-row">
+          <label class="field-label" for="dp-apr">Interest rate (APR)</label>
+          <div class="field-input-wrap">
+            <input class="field-input" id="dp-apr" type="number" inputmode="decimal" placeholder="24" min="0">
+            <span class="field-prefix">%</span>
+          </div>
+        </div>
+      </div>
+      <div class="field-row">
+        <label class="field-label" for="dp-payment">Monthly payment</label>
+        <div class="field-input-wrap">
+          <span class="field-prefix">€</span>
+          <input class="field-input" id="dp-payment" type="number" inputmode="decimal" placeholder="150" min="0">
+        </div>
+        <p class="field-hint">Must be more than the interest that accrues each month.</p>
+      </div>
+
+      <div class="result-empty" id="dp-empty">Fill in your debt details above.</div>
+      <div class="result-box" id="dp-result"></div>
+      <div class="stalled-note" id="dp-stalled" style="display:none">
+        This payment doesn't cover the monthly interest — the balance would never clear. Increase
+        the payment to see a payoff date.
+      </div>
+
+      <div class="tool-cta">
+        <p>Track every payment and watch this date move closer, right inside unBroke.</p>
+        <a class="btn btn-primary" href="https://github.com/unbrokenow/unbroke-releases/releases/latest/download/unbroke.apk" download>Download unBroke free</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 3. SAVINGS GOAL ============ -->
+<section class="tool-section" id="savings-goal">
+  <div class="wrap">
+    <span class="tool-tag savings">SAVINGS</span>
+    <h2 class="tool-h2">Savings Goal Calculator</h2>
+    <p class="tool-desc">
+      How long until you hit a savings target, given what you can put away each month.
+    </p>
+
+    <div class="calc-box">
+      <div class="field-grid">
+        <div class="field-row">
+          <label class="field-label" for="sg-target">Savings target</label>
+          <div class="field-input-wrap">
+            <span class="field-prefix">€</span>
+            <input class="field-input" id="sg-target" type="number" inputmode="decimal" placeholder="3000" min="0">
+          </div>
+        </div>
+        <div class="field-row">
+          <label class="field-label" for="sg-current">Current savings</label>
+          <div class="field-input-wrap">
+            <span class="field-prefix">€</span>
+            <input class="field-input" id="sg-current" type="number" inputmode="decimal" placeholder="0" min="0">
+          </div>
+        </div>
+      </div>
+      <div class="field-grid">
+        <div class="field-row">
+          <label class="field-label" for="sg-monthly">Monthly contribution</label>
+          <div class="field-input-wrap">
+            <span class="field-prefix">€</span>
+            <input class="field-input" id="sg-monthly" type="number" inputmode="decimal" placeholder="200" min="0">
+          </div>
+        </div>
+        <div class="field-row">
+          <label class="field-label" for="sg-apy">Interest rate (APY) — optional</label>
+          <div class="field-input-wrap">
+            <input class="field-input" id="sg-apy" type="number" inputmode="decimal" placeholder="0" min="0">
+            <span class="field-prefix">%</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="result-empty" id="sg-empty">Fill in your savings goal above.</div>
+      <div class="result-box" id="sg-result"></div>
+
+      <div class="tool-cta">
+        <p>Set this as a real target in unBroke and watch a progress bar fill as you save.</p>
+        <a class="btn btn-primary" href="https://github.com/unbrokenow/unbroke-releases/releases/latest/download/unbroke.apk" download>Download unBroke free</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 4. EMERGENCY FUND ============ -->
+<section class="tool-section" id="emergency-fund">
+  <div class="wrap">
+    <span class="tool-tag emergency">EMERGENCY FUND</span>
+    <h2 class="tool-h2">Emergency Fund Calculator</h2>
+    <p class="tool-desc">
+      How big your safety net should be, and how long it'll take to build it at your own pace.
+    </p>
+
+    <div class="calc-box">
+      <div class="field-row">
+        <label class="field-label" for="ef-expenses">Monthly essential expenses</label>
+        <div class="field-input-wrap">
+          <span class="field-prefix">€</span>
+          <input class="field-input" id="ef-expenses" type="number" inputmode="decimal" placeholder="1200" min="0">
+        </div>
+        <p class="field-hint">Rent, food, utilities, insurance, transport — the non-negotiables.</p>
+      </div>
+      <div class="field-row">
+        <label class="field-label" for="ef-months">Months of coverage</label>
+        <select class="field-input" id="ef-months" style="padding:12px 0;">
+          <option value="3">3 months (minimum)</option>
+          <option value="6" selected>6 months (recommended)</option>
+          <option value="9">9 months (conservative)</option>
+          <option value="12">12 months (freelancers)</option>
+        </select>
+      </div>
+      <div class="field-grid">
+        <div class="field-row">
+          <label class="field-label" for="ef-current">Current emergency fund</label>
+          <div class="field-input-wrap">
+            <span class="field-prefix">€</span>
+            <input class="field-input" id="ef-current" type="number" inputmode="decimal" placeholder="0" min="0">
+          </div>
+        </div>
+        <div class="field-row">
+          <label class="field-label" for="ef-monthly">Monthly amount you can save</label>
+          <div class="field-input-wrap">
+            <span class="field-prefix">€</span>
+            <input class="field-input" id="ef-monthly" type="number" inputmode="decimal" placeholder="150" min="0">
+          </div>
+        </div>
+      </div>
+
+      <div class="result-empty" id="ef-empty">Fill in your monthly expenses above.</div>
+      <div class="result-box" id="ef-result"></div>
+
+      <div class="tool-cta">
+        <p>Give your emergency fund its own category in unBroke — with a target and a live progress bar.</p>
+        <a class="btn btn-primary" href="https://github.com/unbrokenow/unbroke-releases/releases/latest/download/unbroke.apk" download>Download unBroke free</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot-row">
+    <a href="index.html" style="font-family:var(--serif);font-weight:700;font-size:15px;text-decoration:none;">unBroke</a>
+    <div class="foot-links">
+      <a href="index.html#privacy">Privacy policy</a>
+      <a href="mailto:mybrokeman@gmail.com">Get in touch</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const fmt = (n) => '€' + Number(n || 0).toLocaleString('en-US', { maximumFractionDigits: 0 });
+
+  function onNum(ids, fn) {
+    ids.forEach((id) => {
+      const el = document.getElementById(id);
+      el.addEventListener('input', fn);
+    });
+    fn();
+  }
+
+  // ---- 1. Zero-based budget ----
+  const ZB_SPLIT = [
+    { name: 'Housing', pct: 28 },
+    { name: 'Groceries', pct: 12 },
+    { name: 'Transport', pct: 10 },
+    { name: 'Utilities', pct: 6 },
+    { name: 'Insurance', pct: 6 },
+    { name: 'Debt payments', pct: 8 },
+    { name: 'Savings', pct: 15 },
+    { name: 'Personal & discretionary', pct: 15 },
+  ];
+  onNum(['zb-income'], () => {
+    const income = parseFloat(document.getElementById('zb-income').value) || 0;
+    const empty = document.getElementById('zb-empty');
+    const result = document.getElementById('zb-result');
+    if (income <= 0) {
+      empty.style.display = 'block';
+      result.style.display = 'none';
+      return;
+    }
+    empty.style.display = 'none';
+    result.style.display = 'block';
+    result.innerHTML = ZB_SPLIT.map(
+      (c) =>
+        `<div class="rt-row"><span class="rt-cat">${c.name}<span class="rt-pct">${c.pct}%</span></span><span class="rt-amt">${fmt(income * c.pct / 100)}</span></div>`
+    ).join('') +
+      `<p class="field-hint" style="margin-top:14px">This is a draft — real zero-based budgeting means tuning every line until €0 is left unassigned.</p>`;
+  });
+
+  // ---- 2. Debt payoff ----
+  function simulateSingleDebtPayoff(balance, apr, payment, maxMonths = 600) {
+    const r = apr / 100 / 12;
+    if (balance <= 0) return { months: 0, totalInterest: 0 };
+    if (payment <= balance * r) return { stalled: true };
+    let bal = balance, months = 0, totalInterest = 0;
+    while (bal > 0.01 && months < maxMonths) {
+      const interest = bal * r;
+      totalInterest += interest;
+      bal += interest;
+      const pay = Math.min(payment, bal);
+      bal -= pay;
+      months++;
+    }
+    return { months, totalInterest, stalled: months >= maxMonths };
+  }
+  onNum(['dp-balance', 'dp-apr', 'dp-payment'], () => {
+    const balance = parseFloat(document.getElementById('dp-balance').value) || 0;
+    const apr = parseFloat(document.getElementById('dp-apr').value) || 0;
+    const payment = parseFloat(document.getElementById('dp-payment').value) || 0;
+    const empty = document.getElementById('dp-empty');
+    const result = document.getElementById('dp-result');
+    const stalledNote = document.getElementById('dp-stalled');
+    result.classList.remove('show');
+    stalledNote.style.display = 'none';
+    if (balance <= 0 || payment <= 0) {
+      empty.style.display = 'block';
+      return;
+    }
+    empty.style.display = 'none';
+    const r = simulateSingleDebtPayoff(balance, apr, payment);
+    if (r.stalled) {
+      stalledNote.style.display = 'block';
+      return;
+    }
+    const d = new Date();
+    d.setMonth(d.getMonth() + r.months);
+    result.classList.add('show');
+    result.innerHTML = `
+      <p class="result-label">Debt-free by</p>
+      <p class="result-big">${d.toLocaleString('en-US', { month: 'long', year: 'numeric' })}</p>
+      <p class="result-sub">${r.months} ${r.months === 1 ? 'month' : 'months'} at this payment</p>
+      <div class="result-row"><span>Total interest paid</span><span>${fmt(r.totalInterest)}</span></div>
+      <div class="result-row"><span>Total paid overall</span><span>${fmt(balance + r.totalInterest)}</span></div>
+    `;
+  });
+
+  // ---- 3. Savings goal ----
+  function simulateSavingsGoal(target, current, monthly, apy, maxMonths = 600) {
+    if (current >= target) return { months: 0 };
+    if (monthly <= 0 && apy <= 0) return { stalled: true };
+    const r = apy / 100 / 12;
+    let bal = current, months = 0;
+    while (bal < target && months < maxMonths) {
+      bal += bal * r;
+      bal += monthly;
+      months++;
+    }
+    return { months, stalled: months >= maxMonths, final: bal };
+  }
+  onNum(['sg-target', 'sg-current', 'sg-monthly', 'sg-apy'], () => {
+    const target = parseFloat(document.getElementById('sg-target').value) || 0;
+    const current = parseFloat(document.getElementById('sg-current').value) || 0;
+    const monthly = parseFloat(document.getElementById('sg-monthly').value) || 0;
+    const apy = parseFloat(document.getElementById('sg-apy').value) || 0;
+    const empty = document.getElementById('sg-empty');
+    const result = document.getElementById('sg-result');
+    result.classList.remove('show');
+    if (target <= 0) {
+      empty.style.display = 'block';
+      return;
+    }
+    empty.style.display = 'none';
+    const r = simulateSavingsGoal(target, current, monthly, apy);
+    if (r.stalled) {
+      result.classList.add('show');
+      result.innerHTML = `<p class="result-sub">Add a monthly contribution or interest rate to project a timeline.</p>`;
+      return;
+    }
+    const d = new Date();
+    d.setMonth(d.getMonth() + r.months);
+    result.classList.add('show');
+    result.innerHTML = `
+      <p class="result-label">Goal reached by</p>
+      <p class="result-big">${r.months === 0 ? 'Already there 🎉' : d.toLocaleString('en-US', { month: 'long', year: 'numeric' })}</p>
+      <p class="result-sub">${r.months} ${r.months === 1 ? 'month' : 'months'} from now</p>
+    `;
+  });
+
+  // ---- 4. Emergency fund ----
+  onNum(['ef-expenses', 'ef-months', 'ef-current', 'ef-monthly'], () => {
+    const expenses = parseFloat(document.getElementById('ef-expenses').value) || 0;
+    const months = parseFloat(document.getElementById('ef-months').value) || 6;
+    const current = parseFloat(document.getElementById('ef-current').value) || 0;
+    const monthly = parseFloat(document.getElementById('ef-monthly').value) || 0;
+    const empty = document.getElementById('ef-empty');
+    const result = document.getElementById('ef-result');
+    result.classList.remove('show');
+    if (expenses <= 0) {
+      empty.style.display = 'block';
+      return;
+    }
+    empty.style.display = 'none';
+    const target = expenses * months;
+    const remaining = Math.max(0, target - current);
+    const monthsToGoal = monthly > 0 ? Math.ceil(remaining / monthly) : null;
+    result.classList.add('show');
+    result.innerHTML = `
+      <p class="result-label">Target emergency fund</p>
+      <p class="result-big">${fmt(target)}</p>
+      <p class="result-sub">${months} months of essential expenses</p>
+      <div class="result-row"><span>Still needed</span><span>${fmt(remaining)}</span></div>
+      <div class="result-row"><span>Time to reach it</span><span>${
+        remaining <= 0 ? 'Already there 🎉' : monthsToGoal ? monthsToGoal + ' months' : 'Add a monthly amount'
+      }</span></div>
+    `;
+  });
+</script>
+
+</body>
+</html>
