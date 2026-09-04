@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>unBroke — Master Your Money</title>
+  <!-- AOS CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-[#FFFDD0] text-slate-900 font-sans antialiased">
+
+  <!-- Hero Section -->
+  <section class="min-h-screen flex flex-col justify-center px-8 max-w-5xl mx-auto">
+    <h1 data-aos="fade-up" data-aos-duration="1000" class="text-7xl md:text-9xl font-extrabold tracking-tighter leading-none mb-6">
+      Stop leaking cash.
+    </h1>
+    <p data-aos="fade-up" data-aos-delay="200" class="text-xl md:text-2xl font-medium text-slate-600 max-w-xl mb-8">
+      unBroke helps you give every dollar a purpose, track habits, and rebuild momentum.
+    </p>
+    <div data-aos="fade-up" data-aos-delay="400" class="flex gap-4">
+      <a href="#" class="bg-black text-white px-8 py-4 rounded-full font-bold text-lg hover:opacity-90 transition">Download for iOS</a>
+      <a href="#" class="border-2 border-black px-8 py-4 rounded-full font-bold text-lg hover:bg-black hover:text-white transition">Android APK</a>
+    </div>
+  </section>
+
+  <!-- Animated Stats Section -->
+  <section class="py-32 border-t border-slate-300 px-8 max-w-5xl mx-auto">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+      <div data-aos="fade-right">
+        <span class="text-6xl font-black block text-blue-600" id="stat-counter">$1,420</span>
+        <span class="text-lg text-slate-600 font-medium">Average annual savings per user</span>
+      </div>
+      <div data-aos="fade-left" data-aos-delay="200">
+        <span class="text-6xl font-black block text-emerald-600">100%</span>
+        <span class="text-lg text-slate-600 font-medium">Private, local-first budget data</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- AOS JS Initialization -->
+  <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+  <script>
+    AOS.init({
+      once: true, // Animation occurs only once while scrolling down
+      easing: 'ease-out-cubic'
+    });
+  </script>
+</body>
+</html>
